@@ -135,14 +135,14 @@
 // console.log(kopi);
 // console.log(luas(10));
 
-try {
-    console.log("step awal");
-    errorcode
-    console.log("step akhir");
-} catch (error) {
-    console.log(error.name);
-    console.log(error.message);
-    console.log(error.stack);
-}
+// try {
+//     console.log("step awal");
+//     errorcode
+//     console.log("step akhir");
+// } catch (error) {
+//     console.log(error.name);
+//     console.log(error.message);
+//     console.log(error.stack);
+// }
 
 // jika ingin mengecek value maka di terminal lalu ketik nama file, contoh (node index.js)
