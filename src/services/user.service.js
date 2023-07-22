@@ -52,7 +52,8 @@ const deleteUser = async (id) => {
 };
 
 const getUserByEmail = async (email) => {
-  const query = `SELECT id,username,email FROM user WHERE email = ${email}`;
+  // const query = `SELECT id,username,email FROM user WHERE email = '${email}'`;
+  const query = `SELECT * FROM user WHERE email = '${email}'`;
   return dbPool.execute(query);
   // const [rows, fields] = await dbPool.execute(query, [email]);
   // return rows;

@@ -13,22 +13,35 @@ const register = async (req, res) => {
   }
 
   try {
-    const cekEmail = await userService.getUserByEmail(body.email);
-    console.log(cekEmail);
-    if (cekEmail.length === 0) {
+    const user = await userService.getUserByEmail(body.email);
+
+    if (user[0][0]) {
+      return res.status(409).json({
+        status: "failed",
+        message: "email sudah terdaftar",
+      });
+    }
       await userService.register(body);
       return res.status(201).json({
         status: "success",
         message: "data berhasil disimpan",
         data: body,
       });
-    } else {
-      return res.status(409).json({
-        status: "failed",
-        message: "email sudah terdaftar",
-      });
-    }
+    // if (cekEmail.length === 0) {
+    //   await userService.register(body);
+    //   return res.status(201).json({
+    //     status: "success",
+    //     message: "data berhasil disimpan",
+    //     data: body,
+    //   });
+    // } else {
+    //   return res.status(409).json({
+    //     status: "failed",
+    //     message: "email sudah terdaftar",
+    //   });
+    // }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       status: "failed",
       message: "gagal meyimpan data",
