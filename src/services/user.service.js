@@ -1,8 +1,4 @@
-// database sementara
 const dbPool = require("../config/database");
-// const { nanoid } = require("nanoid");
-// import { nanoid } from "nanoid";
-// const users = [];
 
 const register = async (body) => {
   // MEMBUAT REGISTER LALU DI TEST DI POSTMAN
@@ -24,15 +20,7 @@ const register = async (body) => {
 };
 
 const login = async (body) => {
-  // const user =
-  //   user.filter(
-  //     (user) => user.email === body.email && user.password === body.password
-  //   ).length > 0;
-
-  // return user;
-
   const query = `SELECT id,username,email FROM user WHERE email = '${body.email}' AND password = '${body.password}'  `;
-
   return dbPool.execute(query);
 };
 
@@ -52,11 +40,13 @@ const deleteUser = async (id) => {
 };
 
 const getUserByEmail = async (email) => {
-  // const query = `SELECT id,username,email FROM user WHERE email = '${email}'`;
   const query = `SELECT * FROM user WHERE email = '${email}'`;
   return dbPool.execute(query);
-  // const [rows, fields] = await dbPool.execute(query, [email]);
-  // return rows;
+};
+
+const findUserById = async (user_id) => {
+  const query = `SELECT * FROM user WHERE id = '${user_id}'`;
+  return dbPool.execute(query);
 };
 
 module.exports = {
@@ -66,4 +56,5 @@ module.exports = {
   viewUser,
   deleteUser,
   getUserByEmail,
+  findUserById
 };

@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const register = async (req, res) => {
   const { body } = req;
 
+// mengecek jika username / email / password jika tidak terisi
   if (!body.username || !body.email || !body.password) {
     return res.status(400).json({
       status: "failed",
@@ -15,12 +16,15 @@ const register = async (req, res) => {
   try {
     const user = await userService.getUserByEmail(body.email);
 
+    // mengecek apakah email yang didaftarkan sudah ada di database atau belum
     if (user[0][0]) {
       return res.status(409).json({
         status: "failed",
         message: "email sudah terdaftar",
       });
     }
+
+    // jika tidak, maka registrasi tersimpan
       await userService.register(body);
       return res.status(201).json({
         status: "success",
@@ -51,11 +55,15 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   const { body } = req;
+
+  // mengecek jika json email tidak terisi
   if (!body.email) {
     return res.status(400).json({
       status: "failed",
       message: "email tidak boleh kosong",
     });
+
+    // mengecek jika json password tidak terisi
   } else if (!body.password) {
     return res.status(400).json({
       status: "failed",
@@ -64,16 +72,20 @@ const login = async (req, res) => {
   }
 
   try {
-    const user = await userService.login(body);
 
+    const user = await userService.login(body);
+    // mengecek jika email & passsword tidak cocok dengan yang ada di database
     if (!user) {
       return res.status(400).json({
         status: "failed",
         message: "email atau password anda salah",
       });
     }
+
+    // mengambil data user melalui array index ke 0
     const dataUser = user[0][0];
 
+    // lalu di masukkan token login
     const jwtToken = jwt.sign(
       {
         id: dataUser.id,
@@ -82,6 +94,7 @@ const login = async (req, res) => {
       process.env.JWT_SECRET
     );
 
+    // status bahwa login berhasil
     return res.status(200).json({
       status: "success",
       message: "login berhasil",
@@ -89,7 +102,6 @@ const login = async (req, res) => {
       data: dataUser,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       status: "failed",
       message: "gagal login",
