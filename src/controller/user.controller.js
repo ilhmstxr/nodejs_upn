@@ -1,5 +1,6 @@
 // const { error } = require('console');
 const userService = require("../services/user.service");
+const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
   const { body } = req;
@@ -12,14 +13,22 @@ const register = async (req, res) => {
   }
 
   try {
-    await userService.register(body);
-    return res.status(201).json({
-      status: "success",
-      message: "data berhasil disimpan",
-      data: body,
-    });
+    const cekEmail = await userService.getUserByEmail(body.email);
+    console.log(cekEmail);
+    if (cekEmail.length === 0) {
+      await userService.register(body);
+      return res.status(201).json({
+        status: "success",
+        message: "data berhasil disimpan",
+        data: body,
+      });
+    } else {
+      return res.status(409).json({
+        status: "failed",
+        message: "email sudah terdaftar",
+      });
+    }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       status: "failed",
       message: "gagal meyimpan data",
@@ -35,7 +44,6 @@ const login = async (req, res) => {
       message: "email tidak boleh kosong",
     });
   } else if (!body.password) {
-    // console.log();
     return res.status(400).json({
       status: "failed",
       message: "password tidak boleh kosong",
@@ -43,13 +51,29 @@ const login = async (req, res) => {
   }
 
   try {
-    const user =await userService.login(body);
+    const user = await userService.login(body);
 
-    // console.log(body);
+    if (!user) {
+      return res.status(400).json({
+        status: "failed",
+        message: "email atau password anda salah",
+      });
+    }
+    const dataUser = user[0][0];
+
+    const jwtToken = jwt.sign(
+      {
+        id: dataUser.id,
+        email: dataUser.email,
+      },
+      process.env.JWT_SECRET
+    );
+
     return res.status(200).json({
       status: "success",
       message: "login berhasil",
-      data: user,
+      token: jwtToken,
+      data: dataUser,
     });
   } catch (error) {
     console.log(error);
@@ -61,11 +85,11 @@ const login = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const id = req.params.id;
+  const id = req.user[0][0].id;
 
   const { body } = req;
 
-  if (!body.username || !body.password || !body.password) {
+  if (!body.username || !body.email || !body.password) {
     return res.status(400).json({
       status: "failed",
       message: "data anda tidak sesuai",
@@ -105,7 +129,8 @@ const viewUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  const id = req.params.id;
+  const id = req.user[0][0].id;
+  console.log(id);
   try {
     await userService.deleteUser(id);
 

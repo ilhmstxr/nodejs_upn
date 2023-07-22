@@ -1,6 +1,6 @@
 const express = require("express");
 const userRouter = require("./route/user.route");
-
+require("./middleware/passport");
 const app = express();
 const PORT = 5000;
 // const PORT = 3307;

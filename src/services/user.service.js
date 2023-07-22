@@ -37,7 +37,7 @@ const login = async (body) => {
 };
 
 const update = async (id, body) => {
-  const query = `UPDATE 'user' SET 'username' = '${body.username}', 'email' = '${body.email}', 'password' = '${body.password}' WHERE id = '${id}'`;
+  const query = `UPDATE user SET username = '${body.username}', email = '${body.email}', password = '${body.password}' WHERE id = '${id}'`;
   return dbPool.execute(query);
 };
 
@@ -51,4 +51,18 @@ const deleteUser = async (id) => {
   return dbPool.execute(query);
 };
 
-module.exports = { register, login, update, viewUser, deleteUser };
+const getUserByEmail = async (email) => {
+  const query = `SELECT id,username,email FROM user WHERE email = ${email}`;
+  return dbPool.execute(query);
+  // const [rows, fields] = await dbPool.execute(query, [email]);
+  // return rows;
+};
+
+module.exports = {
+  register,
+  login,
+  update,
+  viewUser,
+  deleteUser,
+  getUserByEmail,
+};
