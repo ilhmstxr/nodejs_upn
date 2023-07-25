@@ -2,7 +2,10 @@
 ngumpulin tugas
 
 folder fix dari kakaknya berisi code fix dari day 1
-jangan lupa install 
+
+
+
+jangan lupa re-install 
 
 npm install + 
 ├── dotenv@16.3.1
