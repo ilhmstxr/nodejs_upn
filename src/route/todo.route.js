@@ -5,7 +5,7 @@ const passport = require("passport");
 const router = express.Router();
 
 router.post(
-  "/create",
+"/create",
   passport.authenticate("jwt", { session: false }),
   TodoController.create_todo
 );

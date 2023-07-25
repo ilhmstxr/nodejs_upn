@@ -1,13 +1,17 @@
 const dbPool = require("../config/database");
 
-const create_todo = async (user_id, body) => {
-  const query = `INSERT INTO todo (user_id,title ,deadline ,description,created_at)
-   VALUES ('${user_id}''${body.title}','${body.deadline}','${body.descsription}',CURRENT_TIMESTAMP)`;
-  return dbPool.execute(query);
+const create_todo = async (todoData) => {
+  const { title, deadline, description, user_id } = todoData;
+  const created_at = new Date();
+
+  const query = `INSERT INTO todo (title, deadline, description, user_id, created_at) VALUES (?,?,?,?,?) `;
+  const value = [title, deadline, description, user_id, created_at];
+  return dbPool.execute(query,value);
+  
 };
 
-const view_todo = async (body) => {
-  const query = `SELECT * FROM todo WHERE id ='${body.id}'`;
+const view_todo = async (id) => {
+  const query = `SELECT * FROM todo WHERE id ='${id}'`;
   return dbPool.execute(query);
 };
 
@@ -26,7 +30,6 @@ const delete_todo = async (id) => {
   const query = `DELETE FROM todo WHERE id = ${id}`;
   return dbPool.execute(query);
 };
-
 
 module.exports = {
   create_todo,
