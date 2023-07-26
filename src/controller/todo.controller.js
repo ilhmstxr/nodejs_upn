@@ -89,7 +89,7 @@ const viewAll_todo = async (req, res) => {
 
 const update_todo = async (req, res) => {
   const { body } = req;
-  if (!body.title || !body.deadline || !body.decription) {
+  if (!body.title || !body.deadline || !body.description) {
     return res.status(400).json({
       status: "failed",
       message: "data anda tidak sesuai",
@@ -99,10 +99,10 @@ const update_todo = async (req, res) => {
   try {
     return res.status(200).json({
       status: "success",
-      message: "data berhasil di ambil",
-      data: view,
+      message: "data berhasil di update",
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       status: "failed",
       message: "gagal meyimpan data",
